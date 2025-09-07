@@ -1,0 +1,23 @@
+# Base image
+FROM node:22.19.0-alpine
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# Bash for convenience
+RUN apk add --no-cache bash
+
+# Copy package files first
+COPY package*.json ./
+
+# Install all dependencies (including devDeps)
+RUN npm ci --no-audit --prefer-offline || npm install
+
+# Copy rest of the project
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Default command for development (hot reload)
+CMD ["npm", "run", "dev"]
